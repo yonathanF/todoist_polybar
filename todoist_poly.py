@@ -11,8 +11,7 @@ with open(path, 'r') as token_file:
 api = TodoistAPI(token)
 api.sync()
 
-due_this_week = 0
-done = 0
+due_today = 0
 for item in api.items.all():
     due_date = item['due']
     if not due_date:
@@ -23,13 +22,14 @@ for item in api.items.all():
     if due_date is not None:
         due_date = due_datee[:15]
         dueTimestamp = datetime.strptime(due_date, '%Y-%m-%d')
-        today = datetime.today()
-        this_week = today + timedelta(weeks=1)
+        tomorrow = datetime.now() + timedelta(1)
+        midnight = datetime(year=tomorrow.year,
+                            month=tomorrow.month,
+                            day=tomorrow.day,
+                            hour=0,
+                            minute=0,
+                            second=0)
+        if midnight > dueTimestamp and not completed:
+            due_today += 1
 
-        if (this_week - dueTimestamp).total_seconds() > 0 and not completed:
-            due_this_week += 1
-
-        if (this_week - dueTimestamp).total_seconds() > 0 and completed:
-            done += 1
-
-print(str(done) + "/" + str(due_this_week + done) + " tasks completed")
+print("[" + str(due_today) + " tasks left]")

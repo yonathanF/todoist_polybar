@@ -17,5 +17,3 @@ exec = python ~/.config/polybar/todoist_polybar/todoist_poly.py
 click-left = xdg-open https://todoist.com/app
 interval = 500
 ```
-
-
